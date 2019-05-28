@@ -1,0 +1,47 @@
+﻿@model List<CascadingDropdownlistSample.Models.City>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+<h3>İl Seçimi</h3>
+<select id="city" name="city">
+    <option value="2">İl Seçimi:</option>
+    @foreach (var city in Model)
+    {
+        <option value="@city.CityId">@city.CityName</option>
+    }
+</select>
+
+<br />
+<h3>İlçe Seçimi</h3>
+<select id="district" name="district"> </select>
+
+<script type="text/javascript">
+
+    //$("#city").change(function () {
+    //    var grp = $(this);
+    //    if (grp.val() == 2) {
+    //        $("#district").show();
+    //        $("#district :input").prop("required", "true");
+     
+    //    } else {
+    //        $("#district").hide();
+    //        $("#district :input").removeAttr("required");
+    //    } 
+    //});
+        $("#city").change(function () {
+            $("#district").empty();
+
+            var city = $("#city").val();
+
+            $.ajax({
+                url: '@Url.Action("GetDistricts","Home")',
+                type: "POST",
+                dataType: "json",
+                data: { cityId: city },
+                success: function (data) {
+                    $.each(data, function () {
+                        $('#district').append('<option value=' + this.DistrictId + '>' + this.DistrictName + '</option>');
+                    });
+                }
+            });
+        });
+</script>
